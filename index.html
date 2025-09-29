@@ -4,15 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Navigator</title>
-    <!-- Tailwind CSS -->
+    
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZHRoPSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJhZGFyLWljb24gbHVjaWRlLXJhZGFyIj48cGF0aCBkPSJNMTkuMDcgNC45M0ExMCAxMCAwIDAgMCA2Ljk5IDMuMzQiLz48cGF0aCBkPSJNNCA2aC4wMSIvPjxwYXRoIGQ9Ik0yLjI5IDkuNjJBMTAgMTAgMCAxIDAgMjEuMzEgOC4zNSIvPjxwYXRoIGQ9Ik0xNi4yNCA3Ljc2QTYgNiAwIDEgMCA4LjIzIDE2LjY3Ii8+PHBhdGggZD0iTTEyIDE4aC4wMSIvPjxwYXRoIGQ9Ik0xNy45OSAxMS42NkE2IDYgMCAwIDEgMTUuNzcgMTYuNjciLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIi8+PHBhdGggZD0ibTEzLjQxIDEwLjU5IDUuNjYtNS42NiIvPjwvc3ZnPg==" type="image/svg+xml">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React, ReactDOM, Babel -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Markdown Parser -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Custom Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,65 +21,39 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
-        background-color: #111827; /* Dark background */
-        color: #e5e7eb; /* Light text color */
+        background-color: #111827;
+        color: #e5e7eb;
       }
       h1 {
-        font-family: "Courier New", monospace !important; /* Courier New font */
-        text-transform: uppercase; /* All caps */
-        letter-spacing: 0.15em; /* Adds decent spacing between letters */
+        font-family: "Courier New", monospace !important;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      h1 svg {
+        margin-right: 0.5rem;
       }
 
       /* Custom scrollbar for dark theme */
-      .chat-window::-webkit-scrollbar {
-        width: 8px;
-      }
-      .chat-window::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .chat-window::-webkit-scrollbar-thumb {
-        background: #4b5563;
-        border-radius: 4px;
-      }
-      .chat-window::-webkit-scrollbar-thumb:hover {
-        background: #6b7280;
-      }
+      .chat-window::-webkit-scrollbar { width: 8px; }
+      .chat-window::-webkit-scrollbar-track { background: transparent; }
+      .chat-window::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+      .chat-window::-webkit-scrollbar-thumb:hover { background: #6b7280; }
 
       /* Styling for markdown content */
-      .prose p {
-        margin-bottom: 0.75rem;
-        line-height: 1.6;
-      }
-      .prose ul {
-        list-style-type: disc;
-        margin-left: 1.25rem;
-        margin-bottom: 0.75rem;
-      }
-      .prose li {
-        margin-bottom: 0.25rem;
-      }
-      .prose strong {
-        font-weight: 600;
-        color: #f9fafb;
-      }
-      .prose a {
-        color: #60a5fa;
-        text-decoration: underline;
-      }
-      .prose a:hover {
-        color: #93c5fd;
-      }
+      .prose p { margin-bottom: 0.75rem; line-height: 1.6; }
+      .prose ul { list-style-type: disc; margin-left: 1.25rem; margin-bottom: 0.75rem; }
+      .prose li { margin-bottom: 0.25rem; }
+      .prose strong { font-weight: 600; color: #f9fafb; }
+      .prose a { color: #60a5fa; text-decoration: underline; }
+      .prose a:hover { color: #93c5fd; }
 
       /* Fade-in animation for new messages */
       @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       .animate-fade-in {
         animation: fadeIn 0.5s ease-out forwards;
@@ -97,7 +70,7 @@
         const [messages, setMessages] = useState([
           {
             sender: "bot",
-            text: "Hello Mate! I'm your Navigator - how can i guide you today?",
+            text: "Hello Mate! I'm your Navigator - how can I guide you today?",
           },
         ]);
         const [input, setInput] = useState("");
@@ -105,7 +78,6 @@
         const chatWindowRef = useRef(null);
 
         useEffect(() => {
-          // Auto-scroll to the latest message
           if (chatWindowRef.current) {
             chatWindowRef.current.scrollTop =
               chatWindowRef.current.scrollHeight;
@@ -136,7 +108,8 @@
             }
 
             const data = await response.json();
-            const botMessage = { sender: "bot", text: data.answer };
+            const cleanedText = data.answer.replace(/^model\s*/, '');
+            const botMessage = { sender: "bot", text: cleanedText };
             setMessages((prev) => [...prev, botMessage]);
           } catch (error) {
             console.error("Error fetching response:", error);
@@ -150,66 +123,42 @@
           }
         };
 
-        // Icon for the bot
         const BotIcon = () => (
           <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-900 flex items-center justify-center shadow-md">
             <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-gray-400"
-            >
-              <path
-                d="M12 2L2 7L12 12L22 7L12 2Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M2 17L12 22L22 17"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M2 12L12 17L22 12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              width="20" height="20" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg" className="text-gray-400">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
         );
+        
+        // Updated Radar Icon component using your SVG
+        const RadarIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+                <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
+                <path d="M4 6h.01"/>
+                <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
+                <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
+                <path d="M12 18h.01"/>
+                <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
+                <circle cx="12" cy="12" r="2"/>
+                <path d="m13.41 10.59 5.66-5.66"/>
+            </svg>
+        );
 
-        // Component for rendering messages, handling Markdown
         const Message = ({ sender, text }) => {
           const isBot = sender === "bot";
           const parsedHtml = isBot ? marked.parse(text) : null;
 
           return (
-            <div
-              className={`flex items-start gap-4 ${
-                isBot ? "justify-start" : "justify-end"
-              } mb-6 animate-fade-in`}
-            >
+            <div className={`flex items-start gap-4 ${isBot ? "justify-start" : "justify-end"} mb-6 animate-fade-in`}>
               {isBot && <BotIcon />}
-              <div
-                className={`max-w-2xl px-5 py-4 rounded-2xl shadow-lg ${
-                  isBot
-                    ? "bg-gray-800 text-gray-300"
-                    : "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"
-                }`}
-              >
+              <div className={`max-w-2xl px-5 py-4 rounded-2xl shadow-lg ${isBot ? "bg-gray-800 text-gray-300" : "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"}`}>
                 {isBot ? (
-                  <div
-                    className="prose prose-invert"
-                    dangerouslySetInnerHTML={{ __html: parsedHtml }}
-                  />
+                  <div className="prose prose-invert" dangerouslySetInnerHTML={{ __html: parsedHtml }} />
                 ) : (
                   <p className="text-lg">{text}</p>
                 )}
@@ -221,7 +170,8 @@
         return (
           <div className="flex flex-col h-screen bg-gray-900 text-gray-200">
             <header className="bg-gray-900/50 backdrop-blur-sm p-4 border-b border-gray-700/50 sticky top-0 z-10">
-              <h1 className="text-4xl font-semibold text-gray-200 text-center ">
+              <h1 className="text-4xl font-semibold text-gray-200 text-center">
+                <RadarIcon /> {/* Radar icon next to the H1 */}
                 Navigator
               </h1>
             </header>
@@ -239,14 +189,8 @@
                     <div className="max-w-lg px-5 py-4 rounded-2xl bg-gray-800 shadow-lg">
                       <div className="flex items-center space-x-2">
                         <div className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-pulse"></div>
-                        <div
-                          className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-pulse"
-                          style={{ animationDelay: "0.2s" }}
-                        ></div>
-                        <div
-                          className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-pulse"
-                          style={{ animationDelay: "0.4s" }}
-                        ></div>
+                        <div className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
                       </div>
                     </div>
                   </div>
@@ -260,30 +204,15 @@
                   className="flex items-center bg-gray-800 border border-gray-700 rounded-full p-2 shadow-inner"
                 >
                   <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    type="text" value={input} onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask a follow-up question..."
                     className="flex-1 w-full px-4 py-2 text-lg bg-transparent border-none text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-0"
-                    disabled={isLoading}
-                  />
+                    disabled={isLoading} />
                   <button
                     type="submit"
                     className="p-2.5 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-full hover:opacity-90 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-300"
-                    disabled={isLoading || !input.trim()}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-arrow-up"
-                    >
+                    disabled={isLoading || !input.trim()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up">
                       <path d="m5 12 7-7 7 7" />
                       <path d="M12 19V5" />
                     </svg>
