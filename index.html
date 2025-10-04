@@ -66,6 +66,66 @@
     <script type="text/babel">
       const { useState, useEffect, useRef } = React;
 
+      // --- Helper Components moved outside of the main App component ---
+      // This is the fix for the blinking issue.
+
+      // Bot icon for the chat window
+      const BotIcon = () => (
+        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-900 flex items-center justify-center shadow-md flex-shrink-0">
+          <svg
+            width="20" height="20" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg" 
+            className="text-blue-400"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          >
+              <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
+              <path d="M4 6h.01"/>
+              <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
+              <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
+              <path d="M12 18h.01"/>
+              <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
+              <circle cx="12" cy="12" r="2"/>
+              <path d="m13.41 10.59 5.66-5.66"/>
+          </svg>
+        </div>
+      );
+      
+      // Icon for the main heading
+      const RadarIcon = () => (
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+              <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
+              <path d="M4 6h.01"/>
+              <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
+              <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
+              <path d="M12 18h.01"/>
+              <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
+              <circle cx="12" cy="12" r="2"/>
+              <path d="m13.41 10.59 5.66-5.66"/>
+          </svg>
+      );
+
+      const Message = ({ sender, text }) => {
+        const isBot = sender === "bot";
+        // Memoize the parsed HTML to avoid re-parsing on every render unless text changes.
+        const parsedHtml = React.useMemo(() => {
+            return isBot ? marked.parse(text) : null;
+        }, [text, isBot]);
+
+        return (
+          <div className={`flex items-start gap-4 ${isBot ? "justify-start" : "justify-end"} mb-6 animate-fade-in`}>
+            {isBot && <BotIcon />}
+            <div className={`max-w-2xl px-5 py-4 rounded-2xl shadow-lg ${isBot ? "bg-gray-800 text-gray-300" : "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"}`}>
+              {isBot ? (
+                <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: parsedHtml }} />
+              ) : (
+                <p className="text-lg">{text}</p>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      // --- Main Application Component ---
       const App = () => {
         const [messages, setMessages] = useState([
           {
@@ -122,61 +182,7 @@
             setIsLoading(false);
           }
         };
-
-        // Bot icon for the chat window
-        const BotIcon = () => (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-900 flex items-center justify-center shadow-md">
-            <svg
-              width="20" height="20" viewBox="0 0 24 24" fill="none"
-              xmlns="http://www.w3.org/2000/svg" 
-              // **COLOR UPDATED HERE**
-              className="text-blue-400"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            >
-                <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
-                <path d="M4 6h.01"/>
-                <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
-                <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
-                <path d="M12 18h.01"/>
-                <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
-                <circle cx="12" cy="12" r="2"/>
-                <path d="m13.41 10.59 5.66-5.66"/>
-            </svg>
-          </div>
-        );
         
-        // Icon for the main heading
-        const RadarIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
-                <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
-                <path d="M4 6h.01"/>
-                <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
-                <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
-                <path d="M12 18h.01"/>
-                <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
-                <circle cx="12" cy="12" r="2"/>
-                <path d="m13.41 10.59 5.66-5.66"/>
-            </svg>
-        );
-
-        const Message = ({ sender, text }) => {
-          const isBot = sender === "bot";
-          const parsedHtml = isBot ? marked.parse(text) : null;
-
-          return (
-            <div className={`flex items-start gap-4 ${isBot ? "justify-start" : "justify-end"} mb-6 animate-fade-in`}>
-              {isBot && <BotIcon />}
-              <div className={`max-w-2xl px-5 py-4 rounded-2xl shadow-lg ${isBot ? "bg-gray-800 text-gray-300" : "bg-gradient-to-br from-blue-600 to-indigo-700 text-white"}`}>
-                {isBot ? (
-                  <div className="prose prose-invert" dangerouslySetInnerHTML={{ __html: parsedHtml }} />
-                ) : (
-                  <p className="text-lg">{text}</p>
-                )}
-              </div>
-            </div>
-          );
-        };
-
         return (
           <div className="flex flex-col h-screen bg-gray-900 text-gray-200">
             <header className="bg-gray-900/50 backdrop-blur-sm p-4 border-b border-gray-700/50 sticky top-0 z-10">
